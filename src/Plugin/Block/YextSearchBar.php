@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface {
 
+  protected static $yextComponentIndex = 0;
+
   /**
    * Configuration Factory.
    *
@@ -50,29 +52,48 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function build() {
-    $html = '<div class="search_form"></div>
-    <script>
-      function initAnswers() {
-        ANSWERS.init({
-        apiKey:  "' . $this->configuration['api_key'] . '",
-        experienceKey: "' . $this->configuration['experience_key'] . '",
-        experienceVersion: "' . $this->configuration['experience_version'] . '",
-        locale: "' . $this->configuration['locale'] . '",
-        accountId: "' . $this->configuration['account_id'] . '",
-        onReady: function() {
-        ANSWERS.addComponent("SearchBar", {
-              container: ".search_form",
-              name: "search-bar",
-              redirectUrl: "' . $this->configuration['redirect_url'] . '",
-              placeholderText: "' . $this->configuration['search_placeholder'] . '",
-        });
-        },
-        });
-      }
-    </script>';
+    $index = self::$yextComponentIndex++;
+    $id = 'yext-search-bar-'.$index;
+
+    $html = '<div id="'.$id.'" class="search_form"></div>';
+
+    $options = [
+      'apiKey'        => $this->configuration['api_key'],
+      'experienceKey' => $this->configuration['experience_key'],
+      'experienceVersion' => $this->configuration['experience_version'],
+      'accountId' => $this->configuration['account_id'],
+      'locale' => $this->configuration['locale'],
+    ];
+    $searchBar = [
+      'component' => [
+        'container'       => "#$id",
+        'name'            => $id,
+        'verticalKey'     => $this->configuration['vertical_key'],
+        'redirectUrl'     => $this->configuration['redirect_url'],
+        'placeholderText' => $this->configuration['search_placeholder'],
+      ],
+      'placeholderAnimation' => !!$this->configuration['animate_placeholder'],
+    ];
+
     return [
       '#markup' => $html,
       '#allowed_tags' => ['script', 'div'],
+      '#attached' => [
+        'library' => [
+          'yext/yext',
+          'yext/yext_searchbar',
+          'yext/axios.axiosjs',
+          'yext/typed.typedjs',
+        ],
+        'drupalSettings' => [
+          'yext' => [
+            'yextOptions' => $options,
+            'yextSearchBars' => [
+              $index => $searchBar,
+            ]
+          ]
+        ]
+      ],
     ];
   }
 
@@ -92,6 +113,13 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       '#description' => $this->t('Enter the Experience Key from the "Answers -> Experiences" tab in your Yext dashboard.'),
       '#title' => $this->t('Experience Key'),
       '#default_value' => $this->configuration['experience_key'],
+    ];
+
+    $form['vertical_key'] = [
+      '#type' => 'textfield',
+      '#description' => $this->t('Enter the Vertical Key from the "Answers -> Vertical" tab in your Yext dashboard.'),
+      '#title' => $this->t('Vertical Key'),
+      '#default_value' => $this->configuration['vertical_key'],
     ];
 
     $form['experience_version'] = [
@@ -125,7 +153,12 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       '#title' => $this->t('Search Placeholder'),
       '#default_value' => $this->configuration['search_placeholder'],
     ];
-
+    $form['animate_placeholder'] = [
+      '#type' => 'checkbox',
+      '#description' => $this->t('Animate the placeholder in the Yext Answers Bar with autosuggestions.'),
+      '#title' => $this->t('Animate Placeholder'),
+      '#default_value' => $this->configuration['animate_placeholder'],
+    ];
     return $form;
   }
 
@@ -161,11 +194,13 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['api_key'] = $form_state->getValue('api_key');
     $this->configuration['experience_key'] = $form_state->getValue('experience_key');
+    $this->configuration['vertical_key'] = $form_state->getValue('vertical_key');
     $this->configuration['experience_version'] = $form_state->getValue('experience_version');
     $this->configuration['account_id'] = $form_state->getValue('account_id');
     $this->configuration['locale'] = $form_state->getValue('locale');
     $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
+    $this->configuration['animate_placeholder'] = $form_state->getValue('animate_placeholder');
   }
 
   /**
@@ -175,10 +210,13 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
     return [
       'api_key' => NULL,
       'experience_key' => NULL,
+      'vertical_key' => NULL,
+      'experience_version' => "PRODUCTION",
       'account_id' => NULL,
       'locale' => NULL,
       'redirect_url' => NULL,
       'search_placeholder' => NULL,
+      'animate_placeholder' => FALSE,
     ];
   }
 

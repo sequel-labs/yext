@@ -3,3 +3,8 @@ description: "Module to add a Yext Answers experience to your site"
 type: module
 core: 8.x
 core_version_requirement: ^8 || ^9
+
+# Information added by Drupal.org packaging script on 2021-07-15
+version: '1.0.3'
+project: 'yext'
+datestamp: 1626370612

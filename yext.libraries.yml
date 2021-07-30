@@ -1,0 +1,29 @@
+yext:
+  version: 1.x
+  header: true
+  css:
+    component:
+      https://assets.sitescdn.net/answers/v1.5/answers.css: { type: external, minified: true }
+  js:
+      https://assets.sitescdn.net/answers/v1.5/answers.min.js: { type: external, minified: true, attributes: { defer: true, async: true, onload: ANSWERS.domReady(initAnswers) } }
+
+yext_searchbar:
+  version: 1.x
+  js:
+      js/yext_searchbar.js: { }
+  dependencies:
+    - yext/yext
+    - yext/axios.axiosjs
+    - yext/typed.typedjs
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+
+
+axios.axiosjs:
+  js:
+    https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js: { type: external, minified: true }
+
+typed.typedjs:
+  js:
+    https://cdn.jsdelivr.net/npm/typed.js@2.0.11: { type: external }

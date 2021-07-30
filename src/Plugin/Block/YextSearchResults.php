@@ -54,6 +54,11 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
     return [
       '#markup' => $tag,
       '#allowed_tags' => ['script', 'div'],
+      '#attached' => [
+        'library' => [
+          'yext/yext',
+        ],
+      ],
     ];
   }
 
@@ -95,5 +100,5 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
       'yext_search_results' => NULL,
     ];
   }
-  
+
 }

@@ -22,33 +22,3 @@ function yext_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
-
-/**
- * Implements hook_page_attachments().
- */
-function yext_page_attachments(array &$page) {
-  $page['#attached']['html_head'][] = [
-    [
-      '#attributes' => [
-        'href' => 'https://assets.sitescdn.net/answers/v1.5/answers.css',
-        'rel' => 'stylesheet',
-        'type' => 'text/css',
-      ],
-      '#tag' => 'link',
-    ],
-    'yext_link',
-  ];
-
-  $page['#attached']['html_head'][] = [
-    [
-      '#attributes' => [
-        'src' => 'https://assets.sitescdn.net/answers/v1.5/answers.min.js',
-        'onload' => 'ANSWERS.domReady(initAnswers)',
-        'defer' => TRUE,
-        'async' => FALSE,
-      ],
-      '#tag' => 'script',
-    ],
-    'yext_script1',
-  ];
-}
