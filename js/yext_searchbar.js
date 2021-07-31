@@ -4,6 +4,7 @@
     const endpointAll = 'answers/autocomplete';
     const endpointVertical = 'answers/vertical/autocomplete';
 
+    // for animated placeholder text within the searchbar
     const typedOptions = {
         showCursor: true,
         cursorChar: "|",
@@ -16,6 +17,7 @@
         attr: "placeholder",
     };
 
+    // for retrieving strings to animate as placeholder text
     const autocompleteParams = {
         v: (new Date()).toISOString().slice(0,10).replace(/-/g,''),
         api_key: drupalSettings.yext.yextOptions.apiKey,
@@ -23,6 +25,8 @@
         locale: drupalSettings.yext.yextOptions.locale,
     };
 
+    // collection of search bar setup options
+    // (not an array, object with 0 based index properties)
     const yextSearchBars = drupalSettings.yext.yextSearchBars;
 
     var yextOnReady = function() {
@@ -60,6 +64,7 @@
 
     var doOnce = true;
 
+    // overcome an issue where sometimes Drupal.behaviors.yextSearchbars.attach() would run before ANSWERS was present
     var initAnswers = function() {
 
         if (doOnce && ANSWERS) {
