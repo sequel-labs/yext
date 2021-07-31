@@ -13,16 +13,10 @@ yext_searchbar:
       js/yext_searchbar.js: { }
   dependencies:
     - yext/yext
-    - yext/axios.axiosjs
     - yext/typed.typedjs
     - core/jquery
     - core/jquery.once
     - core/drupal
-
-
-axios.axiosjs:
-  js:
-    https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js: { type: external, minified: true }
 
 typed.typedjs:
   js:

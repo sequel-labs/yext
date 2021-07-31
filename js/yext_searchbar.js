@@ -42,11 +42,12 @@
                     params.verticalKey = searchBar.component.verticalKey;
                 }
 
-                url = api + endpoint + '?' + $.param(params);
-                axios.get(url).then(function(response) {
+                url = api + endpoint;
+
+                $.get(url, params, function(data){
                     var strings;
-                    if (response.data && response.data.response && response.data.response.results) {
-                        strings = response.data.response.results.map(function(r) {
+                    if (data && data.response && data.response.results) {
+                        strings = data.response.results.map(function(r) {
                             return r.value;
                         });
                     }
@@ -54,7 +55,7 @@
                         var options = $.extend({strings: strings}, typedOptions);
                         var typed = new Typed(searchBar.component.container + " .js-yext-query", options);
                     }
-                });
+                }, 'json');
             }
         });
     };
