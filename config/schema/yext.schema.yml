@@ -1,0 +1,18 @@
+# Schema for the configuration files of the yext module.
+
+yext.settings:
+  type: config_object
+  label: 'Yext settings'
+  mapping:
+    api_key:
+      type: string
+      label: 'API key'
+    experience_key:
+      type: string
+      label: 'Experience key'
+    experience_version:
+      type: string
+      label: 'Experience Version'
+    account_id:
+      type: string
+      label: 'Account ID'

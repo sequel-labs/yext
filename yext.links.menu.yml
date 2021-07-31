@@ -1,0 +1,6 @@
+yext.admin_settings_form:
+  title: 'Yext'
+  parent: system.admin_config_search
+  description: 'Configure Yext API Settings.'
+  route_name: yext.admin_settings_form
+  weight: 1

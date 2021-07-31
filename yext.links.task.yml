@@ -1,0 +1,5 @@
+yext.admin_settings_form_tab:
+  route_name: yext.admin_settings_form
+  base_route: yext.admin_settings_form
+  title: Yext
+  weight: 0

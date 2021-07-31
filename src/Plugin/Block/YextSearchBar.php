@@ -52,18 +52,25 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function build() {
+    $yextConfig = $this->configFactory->get('yext.settings');
+
     $index = self::$yextComponentIndex++;
     $id = 'yext-search-bar-'.$index;
 
     $html = '<div id="'.$id.'" class="search_form"></div>';
 
     $options = [
-      'apiKey'        => $this->configuration['api_key'],
-      'experienceKey' => $this->configuration['experience_key'],
-      'experienceVersion' => $this->configuration['experience_version'],
-      'accountId' => $this->configuration['account_id'],
+      'apiKey'        => $yextConfig->get('api_key'),
+      'experienceKey' => $yextConfig->get('experience_key'),
+      'accountId' => $yextConfig->get('account_id'),
       'locale' => $this->configuration['locale'],
     ];
+
+    // don't include experience_version if it has no value
+    if ($yextConfig->get('experience_version')) {
+      $options['experienceVersion'] = $yextConfig->get('experience_version');
+    }
+
     $searchBar = [
       'component' => [
         'container'       => "#$id",
@@ -101,39 +108,12 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $form['api_key'] = [
-      '#type' => 'textfield',
-      '#description' => $this->t('Enter the API Key from the "Answers -> Experiences" tab in your Yext dashboard.'),
-      '#title' => $this->t('API Key'),
-      '#default_value' => $this->configuration['api_key'],
-    ];
-
-    $form['experience_key'] = [
-      '#type' => 'textfield',
-      '#description' => $this->t('Enter the Experience Key from the "Answers -> Experiences" tab in your Yext dashboard.'),
-      '#title' => $this->t('Experience Key'),
-      '#default_value' => $this->configuration['experience_key'],
-    ];
 
     $form['vertical_key'] = [
       '#type' => 'textfield',
       '#description' => $this->t('Enter the Vertical Key from the "Answers -> Vertical" tab in your Yext dashboard.'),
       '#title' => $this->t('Vertical Key'),
       '#default_value' => $this->configuration['vertical_key'],
-    ];
-
-    $form['experience_version'] = [
-      '#type' => 'textfield',
-      '#description' => $this->t('Enter the verion of your Yext Answers Experience (i.e. "STAGING", "PRODUCTION").'),
-      '#title' => $this->t('Experience version'),
-      '#default_value' => $this->configuration['experience_version'],
-    ];
-
-    $form['account_id'] = [
-      '#type' => 'textfield',
-      '#description' => $this->t('Enter your Yext Account ID.'),
-      '#title' => $this->t('Account Id'),
-      '#default_value' => $this->configuration['account_id'],
     ];
     $form['locale'] = [
       '#type' => 'textfield',
@@ -166,15 +146,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function blockValidate($form, FormStateInterface $form_state) {
-    $api_key = $form_state->getValue('api_key');
-    if (strlen($api_key) != 32 || !ctype_alnum($api_key)) {
-      $form_state->setErrorByName('api_key', $this->t("The API Key must be 32 characters in length and all alphanumberic."));
-    }
-
-    $account_id = $form_state->getValue('account_id');
-    if (!is_numeric($account_id)) {
-      $form_state->setErrorByName('account_id', $this->t("The entered Yext Account ID is invalid."));
-    }
 
     $locale = $form_state->getValue('locale');
     $locale_regex = "/^[a-z]{2}(?:_[A-Z]{2})?$/";
@@ -192,11 +163,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['api_key'] = $form_state->getValue('api_key');
-    $this->configuration['experience_key'] = $form_state->getValue('experience_key');
     $this->configuration['vertical_key'] = $form_state->getValue('vertical_key');
-    $this->configuration['experience_version'] = $form_state->getValue('experience_version');
-    $this->configuration['account_id'] = $form_state->getValue('account_id');
     $this->configuration['locale'] = $form_state->getValue('locale');
     $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
@@ -208,11 +175,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function defaultConfiguration() {
     return [
-      'api_key' => NULL,
-      'experience_key' => NULL,
       'vertical_key' => NULL,
-      'experience_version' => "PRODUCTION",
-      'account_id' => NULL,
       'locale' => NULL,
       'redirect_url' => NULL,
       'search_placeholder' => NULL,

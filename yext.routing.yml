@@ -1,0 +1,7 @@
+yext.admin_settings_form:
+  path: '/admin/config/search/yext'
+  defaults:
+    _form: '\Drupal\yext\Form\YextAdminSettingsForm'
+    _title: 'Yext'
+  requirements:
+    _permission: 'administer yext'
