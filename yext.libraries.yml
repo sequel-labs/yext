@@ -5,7 +5,7 @@ yext:
     component:
       https://assets.sitescdn.net/answers/v1.5/answers.css: { type: external, minified: true }
   js:
-      https://assets.sitescdn.net/answers/v1.5/answers.min.js: { type: external, minified: true, attributes: { defer: true, async: true, onload: ANSWERS.domReady(initAnswers) } }
+      https://assets.sitescdn.net/answers/v1.5/answers.min.js: { type: external, minified: true, attributes: { defer: true, async: true, onload: 'window.initAnswers && ANSWERS.domReady(initAnswers)' } }
 
 yext_searchbar:
   version: 1.x

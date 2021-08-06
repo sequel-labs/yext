@@ -68,7 +68,7 @@
     // overcome an issue where sometimes Drupal.behaviors.yextSearchbars.attach() would run before ANSWERS was present
     var initAnswers = function() {
 
-        if (doOnce && ANSWERS) {
+        if (doOnce && typeof ANSWERS !== 'undefined') {
             doOnce = false;
             ANSWERS.init(yextConfig);
         }
