@@ -54,7 +54,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
   public function build() {
     $yextConfig = $this->configFactory->get('yext.settings');
 
-    $id = Html::getUniqueId('yext-search-bar');
+    $id = $this->configuration['block_id'] ? $this->configuration['block_id'].'-search-bar' : 'yext-search-bar-' . mt_rand();
 
     $html = '<div id="'.$id.'" class="search_form"></div>';
 
@@ -153,6 +153,12 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
     $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
     $this->configuration['animate_placeholder'] = $form_state->getValue('animate_placeholder');
+
+    $block = $form_state->getFormObject()->getEntity();
+    if ($block) {
+        $this->configuration['block_id'] = $block->id();
+    }
+
   }
 
   /**
@@ -160,6 +166,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function defaultConfiguration() {
     return [
+      'block_id' => NULL,
       'vertical_key' => NULL,
       'redirect_url' => NULL,
       'search_placeholder' => NULL,
