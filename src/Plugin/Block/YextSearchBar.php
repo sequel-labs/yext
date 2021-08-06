@@ -2,6 +2,7 @@
 
 namespace Drupal\yext\Plugin\Block;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,8 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface {
-
-  protected static $yextComponentIndex = 0;
 
   /**
    * Configuration Factory.
@@ -55,8 +54,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
   public function build() {
     $yextConfig = $this->configFactory->get('yext.settings');
 
-    $index = self::$yextComponentIndex++;
-    $id = 'yext-search-bar-'.$index;
+    $id = Html::getUniqueId('yext-search-bar');
 
     $html = '<div id="'.$id.'" class="search_form"></div>';
 
@@ -97,7 +95,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
           'yext' => [
             'yextOptions' => $options,
             'yextSearchBars' => [
-              $index => $searchBar,
+              $id => $searchBar,
             ]
           ]
         ]
