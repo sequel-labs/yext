@@ -13,6 +13,9 @@ yext.settings:
     experience_version:
       type: string
       label: 'Experience Version'
+    locale:
+      type: string
+      label: 'Locale'
     account_id:
       type: string
       label: 'Account ID'

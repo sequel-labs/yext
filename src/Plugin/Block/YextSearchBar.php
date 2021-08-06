@@ -40,6 +40,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
     return new static(
       $configuration,
       $plugin_id,
@@ -63,7 +64,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       'apiKey'        => $yextConfig->get('api_key'),
       'experienceKey' => $yextConfig->get('experience_key'),
       'accountId' => $yextConfig->get('account_id'),
-      'locale' => $this->configuration['locale'],
+      'locale' => $yextConfig->get('locale'),
     ];
 
     // don't include experience_version if it has no value
@@ -115,12 +116,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       '#title' => $this->t('Vertical Key'),
       '#default_value' => $this->configuration['vertical_key'],
     ];
-    $form['locale'] = [
-      '#type' => 'textfield',
-      '#description' => $this->t('Enter the locale code for the language of your Answers Experience (i.e. en).'),
-      '#title' => $this->t('Locale'),
-      '#default_value' => $this->configuration['locale'],
-    ];
     $form['redirect_url'] = [
       '#type' => 'textfield',
       '#description' => $this->t('Enter the url of the page to which a search should redirect. Note: This page should contain the "Yext Answers Result" block.'),
@@ -147,12 +142,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockValidate($form, FormStateInterface $form_state) {
 
-    $locale = $form_state->getValue('locale');
-    $locale_regex = "/^[a-z]{2}(?:_[A-Z]{2})?$/";
-    if (!preg_match($locale_regex, $locale)) {
-      $form_state->setErrorByName('locale', $this->t("The entered locale is invalid."));
-    }
-
     $redirect_url = $form_state->getValue('redirect_url');
     if (!filter_var($redirect_url, FILTER_VALIDATE_URL)) {
       $form_state->setErrorByName('redirect_url', $this->t("The entered Redirect Url is not a valid url."));
@@ -164,7 +153,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['vertical_key'] = $form_state->getValue('vertical_key');
-    $this->configuration['locale'] = $form_state->getValue('locale');
     $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
     $this->configuration['animate_placeholder'] = $form_state->getValue('animate_placeholder');
@@ -176,7 +164,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
   public function defaultConfiguration() {
     return [
       'vertical_key' => NULL,
-      'locale' => NULL,
       'redirect_url' => NULL,
       'search_placeholder' => NULL,
       'animate_placeholder' => FALSE,

@@ -61,6 +61,13 @@ class YextAdminSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
     ];
 
+    $form['general']['locale'] = [
+      '#default_value' => $config->get('locale'),
+      '#description' => $this->t('Enter the locale code for the language of your Answers Experience (i.e. en).'),
+      '#title' => $this->t('Locale'),
+      '#type' => 'textfield',
+    ];
+
     $form['general']['yext_account_id'] = [
       '#default_value' => $config->get('account_id'),
       '#description' => $this->t('Enter your Yext Account ID.'),
@@ -80,6 +87,7 @@ class YextAdminSettingsForm extends ConfigFormBase {
       ->set('api_key', $form_state->getValue('yext_api_key'))
       ->set('experience_key', $form_state->getValue('yext_experience_key'))
       ->set('experience_version', $form_state->getValue('yext_experience_version'))
+      ->set('locale', $form_state->getValue('locale'))
       ->set('account_id', $form_state->getValue('yext_account_id'))
       ->save();
 
@@ -100,6 +108,12 @@ class YextAdminSettingsForm extends ConfigFormBase {
     $account_id = $form_state->getValue('yext_account_id');
     if (!is_numeric($account_id)) {
       $form_state->setErrorByName('yext_account_id', $this->t("The entered Yext Account ID is invalid."));
+    }
+
+    $locale = $form_state->getValue('locale');
+    $locale_regex = "/^[a-z]{2}(?:_[A-Z]{2})?$/";
+    if (!preg_match($locale_regex, $locale)) {
+      $form_state->setErrorByName('locale', $this->t("The entered locale is invalid."));
     }
 
   }
