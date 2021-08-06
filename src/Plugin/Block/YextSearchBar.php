@@ -88,7 +88,6 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
         'library' => [
           'yext/yext',
           'yext/yext_searchbar',
-          'yext/axios.axiosjs',
           'yext/typed.typedjs',
         ],
         'drupalSettings' => [
