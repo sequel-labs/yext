@@ -70,7 +70,7 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
       '#type' => 'textfield',
       '#description' => $this->t('Enter the url of the Pages Site that you linked to your Answers Experience on the "Answers -> Experiences" tab in your Yext dashboard.'),
       '#title' => $this->t('Yext Answers Page'),
-      '#default_value' => $this->configuration['yext_answers_results'],
+      '#default_value' => $this->configuration['yext_search_results'],
     ];
     return $form;
   }
