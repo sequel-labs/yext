@@ -49,7 +49,8 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function build() {
-    $tag = '<div id="answers-container"></div><script src="' . $this->configuration['yext_search_results'] . '/iframe.js"></script>';
+    $path = $this->configuration['yext_search_path'] ? ' data-path="' . $this->configuration['yext_search_path'] . '"' : '';
+    $tag = '<div id="answers-container"' . $path . '></div><script src="' . $this->configuration['yext_search_results'] . '/iframe.js"></script>';
 
     return [
       '#markup' => $tag,
@@ -72,6 +73,12 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
       '#title' => $this->t('Yext Answers Page'),
       '#default_value' => $this->configuration['yext_search_results'],
     ];
+    $form['yext_search_path'] = [
+      '#type' => 'textfield',
+      '#description' => $this->t('If you do not want to show the root url of your Answers Experience, enter the URL of a specific page in your experience (like a vertical page, or an international subfolder).'),
+      '#title' => $this->t('Yext Answers Path'),
+      '#default_value' => $this->configuration['yext_search_path'],
+    ];
     return $form;
   }
 
@@ -90,6 +97,7 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['yext_search_results'] = $form_state->getValue('yext_search_results');
+    $this->configuration['yext_search_path'] = $form_state->getValue('yext_search_path');
   }
 
   /**
@@ -98,6 +106,7 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
   public function defaultConfiguration() {
     return [
       'yext_search_results' => NULL,
+      'yext_search_path' => NULL,
     ];
   }
 
