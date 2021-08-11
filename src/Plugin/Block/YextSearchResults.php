@@ -49,6 +49,7 @@ class YextSearchResults extends BlockBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function build() {
+    // data-path attribute allows us to set the vertical, the attribute shouldn't be present when there is no vertical
     $path = $this->configuration['yext_search_path'] ? ' data-path="' . $this->configuration['yext_search_path'] . '"' : '';
     $tag = '<div id="answers-container"' . $path . '></div><script src="' . $this->configuration['yext_search_results'] . '/iframe.js"></script>';
 

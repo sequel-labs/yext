@@ -34,10 +34,12 @@ Experience.
 
 ### Step 4: Place the Yext Answers Experience on your Drupal site
 
-Finally, navigate the the Structure -> Block Layout tab of your Drupal admin. 
-Now that the module has been installed, you will be able to place the "Yext 
-Answers Bar" and "Yext Answers Results" blocks on your Drupal site. Each block 
-that you place on your site will need to be configured with the necessary 
+Go to Config -> Search -> Yext and fill out your Yext account details
+
+Finally, navigate the the Structure -> Block Layout tab of your Drupal admin.
+Now that the module has been installed, you will be able to place the "Yext
+Search Bar" and "Yext Search Results" blocks on your Drupal site. Each block
+that you place on your site will need to be configured with the necessary
 information from your Yext Answers Experience.
 
 About Answers
