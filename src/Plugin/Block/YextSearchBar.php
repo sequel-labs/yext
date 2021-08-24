@@ -70,6 +70,8 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       $options['experienceVersion'] = $yextConfig->get('experience_version');
     }
 
+    $searchIcon = $this->configuration['search_icon'] ?? $yextConfig->get('search_icon');
+
     $searchBar = [
       'component' => [
         'container'       => "#$id",
@@ -80,6 +82,14 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       ],
       'placeholderAnimation' => !!$this->configuration['animate_placeholder'],
     ];
+
+    if ($searchIcon) {
+      if (filter_var($searchIcon, FILTER_VALIDATE_URL)) {
+        $searchBar['component']['customIconUrl'] = $searchIcon;
+      } else {
+        $searchBar['component']['submitIcon'] = $searchIcon;
+      }
+    }
 
     return [
       '#markup' => $html,
@@ -119,6 +129,12 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       '#title' => $this->t('Redirect Url'),
       '#default_value' => $this->configuration['redirect_url'],
     ];
+    $form['search_icon'] = [
+      '#type' => 'textfield',
+      '#description' => $this->t('Enter the name or url of the icon you to show in the search bar.  If no value is specified the search icon from the Yext settings will be shown.  For more details of Yext icon names see https://hitchhikers.yext.com/docs/answers-sdk/components/search-bar/'),
+      '#title' => $this->t('Search Icon'),
+      '#default_value' => $this->configuration['search_icon'],
+    ];
     $form['search_placeholder'] = [
       '#type' => 'textfield',
       '#description' => $this->t('Enter the placeholder text you would like to appear in the Yext Answers Bar.'),
@@ -151,6 +167,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['vertical_key'] = $form_state->getValue('vertical_key');
     $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
+    $this->configuration['search_icon'] = $form_state->getValue('search_icon');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
     $this->configuration['animate_placeholder'] = $form_state->getValue('animate_placeholder');
 
@@ -169,6 +186,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       'block_id' => NULL,
       'vertical_key' => NULL,
       'redirect_url' => NULL,
+      'search_icon' => NULL,
       'search_placeholder' => NULL,
       'animate_placeholder' => FALSE,
     ];

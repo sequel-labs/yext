@@ -61,6 +61,13 @@ class YextAdminSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
     ];
 
+    $form['general']['search_icon'] = [
+      '#default_value' => $config->get('search_icon'),
+      '#description' => $this->t('Enter the name or url of the icon to show in the search bar.  Leave blank to use the YEXT icon.  This setting can be overridden in the searchbar block. For more details of Yext icon names see https://hitchhikers.yext.com/docs/answers-sdk/components/search-bar/'),
+      '#title' => $this->t('Default search icon'),
+      '#type' => 'textfield',
+    ];
+
     $form['general']['locale'] = [
       '#default_value' => $config->get('locale'),
       '#description' => $this->t('Enter the locale code for the language of your Answers Experience (i.e. en).'),
@@ -87,6 +94,7 @@ class YextAdminSettingsForm extends ConfigFormBase {
       ->set('api_key', $form_state->getValue('yext_api_key'))
       ->set('experience_key', $form_state->getValue('yext_experience_key'))
       ->set('experience_version', $form_state->getValue('yext_experience_version'))
+      ->set('search_icon', $form_state->getValue('search_icon'))
       ->set('locale', $form_state->getValue('locale'))
       ->set('account_id', $form_state->getValue('yext_account_id'))
       ->save();

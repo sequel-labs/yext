@@ -13,6 +13,9 @@ yext.settings:
     experience_version:
       type: string
       label: 'Experience Version'
+    search_icon:
+      type: string
+      label: 'Search icon'
     locale:
       type: string
       label: 'Locale'
