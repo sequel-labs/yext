@@ -83,7 +83,11 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       'placeholderAnimation' => !!$this->configuration['animate_placeholder'],
     ];
 
+    $searchIcon = $this->configuration['search_icon'] ? $this->configuration['search_icon'] : $yextConfig->get('search_icon');
     if ($searchIcon) {
+      if (substr($searchIcon,0,1) === '/') {
+        $searchIcon = ((substr($searchIcon,1,1) === '/') ? \Drupal::request()->getScheme().':' :  \Drupal::request()->getSchemeAndHttpHost()) . $searchIcon;
+      }
       if (filter_var($searchIcon, FILTER_VALIDATE_URL)) {
         $searchBar['component']['customIconUrl'] = $searchIcon;
       } else {
