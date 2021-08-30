@@ -2,7 +2,9 @@
 
 namespace Drupal\yext\Plugin\Block;
 
+use Drupal\yext\Utility\RedirectUrlWidget;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormStateInterface;
@@ -70,14 +72,14 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       $options['experienceVersion'] = $yextConfig->get('experience_version');
     }
 
-    $searchIcon = $this->configuration['search_icon'] ?? $yextConfig->get('search_icon');
+    $redirect_url = Url::fromUri($this->configuration['redirect_url'], ['absolute' => true])->toString();
 
     $searchBar = [
       'component' => [
         'container'       => "#$id",
         'name'            => $id,
         'verticalKey'     => $this->configuration['vertical_key'],
-        'redirectUrl'     => $this->configuration['redirect_url'],
+        'redirectUrl'     => $redirect_url,
         'placeholderText' => $this->configuration['search_placeholder'],
       ],
       'placeholderAnimation' => !!$this->configuration['animate_placeholder'],
@@ -127,11 +129,16 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
       '#title' => $this->t('Vertical Key'),
       '#default_value' => $this->configuration['vertical_key'],
     ];
+    // redirectUrl is handled like a normal link field, but without the title/label
+    // to do that we hijack the link widget class and to gain access to its protected methods which transform & validate the urls
     $form['redirect_url'] = [
-      '#type' => 'textfield',
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'node',
       '#description' => $this->t('Enter the url of the page to which a search should redirect. Note: This page should contain the "Yext Answers Result" block.'),
       '#title' => $this->t('Redirect Url'),
-      '#default_value' => $this->configuration['redirect_url'],
+      '#default_value' => RedirectUrlWidget::getUriAsDisplayableString(($this->configuration['redirect_url'])),
+      '#process_default_value' => FALSE,
+      '#element_validate' => [['\Drupal\yext\Utility\RedirectUrlWidget', 'validateUriElement']],
     ];
     $form['search_icon'] = [
       '#type' => 'textfield',
@@ -159,10 +166,10 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockValidate($form, FormStateInterface $form_state) {
 
-    $redirect_url = $form_state->getValue('redirect_url');
-    if (!filter_var($redirect_url, FILTER_VALIDATE_URL)) {
-      $form_state->setErrorByName('redirect_url', $this->t("The entered Redirect Url is not a valid url."));
-    }
+    // $redirect_url = $form_state->getValue('redirect_url');
+    // if (!filter_var($redirect_url, FILTER_VALIDATE_URL)) {
+    //   $form_state->setErrorByName('redirect_url', $this->t("The entered Redirect Url is not a valid url."));
+    // }
   }
 
   /**
@@ -170,7 +177,7 @@ class YextSearchBar extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['vertical_key'] = $form_state->getValue('vertical_key');
-    $this->configuration['redirect_url'] = $form_state->getValue('redirect_url');
+    $this->configuration['redirect_url'] = RedirectUrlWidget::getUserEnteredStringAsUri($form_state->getValue('redirect_url'));
     $this->configuration['search_icon'] = $form_state->getValue('search_icon');
     $this->configuration['search_placeholder'] = $form_state->getValue('search_placeholder');
     $this->configuration['animate_placeholder'] = $form_state->getValue('animate_placeholder');
