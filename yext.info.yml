@@ -5,7 +5,7 @@ core: 8.x
 core_version_requirement: ^8 || ^9
 configure: yext.admin_settings_form
 
-# Information added by Drupal.org packaging script on 2021-07-15
-version: '1.0.3'
+# Information added by Drupal.org packaging script on 2021-08-11
+version: '1.0.4'
 project: 'yext'
-datestamp: 1626370612
+datestamp: 1628694920
