@@ -1,0 +1,13 @@
+--- answers.js	2022-01-12 19:08:51.111645515 +0000
++++ answers.js	2022-01-12 19:36:12.791679208 +0000
+@@ -21726,7 +21726,9 @@
+
+ 	    if (typeof this.redirectUrl === 'string') {
+ 	      if (this._allowEmptySearch || query) {
+-	        var newUrl = this.redirectUrl + '?' + params.toString();
++	        // Fix issue with url construction not honoring existing query parameters
++	        // var newUrl = this.redirectUrl + '?' + params.toString();
++	        var newUrl = urlutils.addParamsToURL(this.redirectUrl, Object.fromEntries(params));
+ 	        window.open(newUrl, this.redirectUrlTarget) || (window.location.href = newUrl);
+ 	        return false;
+ 	      }
