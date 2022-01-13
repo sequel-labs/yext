@@ -7,4 +7,5 @@ to update:
   1. retrieve updated copy of answers.js from https://assets.sitescdn.net/answers/answers.js
   2. remove source map
   3. apply answers.patch (e.g.  patch < answers.patch)
+  4. minify answers.js -> answers.min.js
   4. verify and commit update
